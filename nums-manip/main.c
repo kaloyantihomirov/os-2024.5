@@ -60,6 +60,10 @@ int main(int argc, char ** argv)
         err(1, "Could not open file %s.", filename);
     }
 
+    //If file's size is not divisible by 2, we can tell from here that on the last read operation
+    //we would have a problem, but I don't think it makes sense to disregard the results found up
+    //until that point in time.
+
     uint16_t num;
     ssize_t read_bytes;
     uint16_t globalExtrema;
