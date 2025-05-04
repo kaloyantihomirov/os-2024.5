@@ -67,8 +67,12 @@ int main(int argc, char ** argv)
 
     while((read_bytes = read(fd, &num, sizeof(num))) == sizeof(num)) {
         if(strcmp(option, "print") == 0) {
-            //TODO: handle error handling for write invocations
-            dprintf(STDOUT_FILENO, "%u\n", num);
+            ssize_t writtenBytes = dprintf(STDOUT_FILENO, "%u\n", num);
+
+            if(writtenBytes < 0) {
+                close(fd);
+                err(1, "Cannot write to standard output.");
+            }
         }
         else {
             if(firstPass || (*get_comparator(option))(num, globalExtrema)) {
@@ -84,7 +88,8 @@ int main(int argc, char ** argv)
         err(1, "Cannot read from %s.", filename);
     }
 
-    if(read_bytes != 0) {
+    if(read_bytes != 0) /* = 1 */ {
+        dprintf(STDOUT_FILENO, "current result: %u\n", globalExtrema);
         err(1, "Wrong file format. Expected a file, containing only 2-byte unsigned integers.");
     }
 
