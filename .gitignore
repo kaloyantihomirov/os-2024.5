@@ -1,2 +1,5 @@
 *.o
 main
+*.swp
+cmake-build-debug/
+.idea/
