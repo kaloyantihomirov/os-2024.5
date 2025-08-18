@@ -36,7 +36,7 @@ else
     exit 4
 fi
 
-if [[ ( "$mode" = 'start' || "$mode" = 'stop' ) && ! "$#" -eq 3 ]]; then
+if [[ ( "$mode" = 'start' || "$mode" = 'stop' ) && ! "$#" -eq 2 ]]; then
     echo "Invalid usage! Expected: start/stop service_name" >&2
     exit 5
 fi
