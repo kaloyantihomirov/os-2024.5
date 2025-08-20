@@ -34,7 +34,7 @@ for file in $files; do
     for replacement in $replacements; do
         target=$(echo "$replacement" | sed -E 's/^-R([a-zA-Z0-9]+)=[a-zA-Z0-9]+$/\1/')
         replacement=$(echo "$replacement" | sed -E 's/^-R[a-zA-Z0-9]+=([a-zA-Z0-9]+)$/\1/')
-        sed -E -i "/^#/! s/\<$target\>/${replacement}${curr_unique_str}/" "$file"    
+        sed -E -i "/^#/! s/\<$target\>/${replacement}${curr_unique_str}/g" "$file"    
         #cat "$file"
     done
 
