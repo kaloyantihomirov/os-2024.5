@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #parse arguments -> we don't know how many arguments we have
 #loop and get $1, $2, $3, ... while $x is not empty
 #we need to have the files first and then begin processing them with the -R<word1>=<word2> arguments
@@ -40,3 +42,4 @@ for file in $files; do
 done
 
 exit 0
+
