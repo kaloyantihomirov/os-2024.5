@@ -47,7 +47,9 @@ int main(int argc, char* argv[]) {
     size_t records_count = f.st_size / sizeof(node);
     while((read_bytes = read(fd, &c_node, sizeof(c_node))) > 0) {
         //printf("next: %ld\n", c_node.next);
-        if (write(tmp_fd, &curr, sizeof(curr)) != sizeof(curr)) { err(6, "cannot write"); }
+        if (lseek(tmp_fd, curr, SEEK_SET) < 0) { err(8, "cannot lseek"); }
+        uint8_t one = 1;
+        if (write(tmp_fd, &one, sizeof(one)) != sizeof(one)) { err(6, "cannot write"); }
         if (c_node.next == 0 || c_node.next >= records_count) {
             break;
         }
@@ -58,7 +60,10 @@ int main(int argc, char* argv[]) {
     if(read_bytes < 0) { err(8, "cannot read"); }
 
     for (uint64_t i = 1; i < records_count; i++) {
-        if(!contains(tmp_fd, i)) {
+        if(lseek(tmp_fd, i, SEEK_SET) < 0) { err(13, "cannot lseek"); }
+        uint8_t val = 0;
+        if(read(tmp_fd, &val, sizeof(val)) < 0) { err(14, "cannot read"); } 
+        if(val == 0) {
             printf("will zero out %ld entry\n", i);
             // write 512B nulls starting from byte with num i * sizeof(node)
             if(lseek(fd, i * sizeof(node), SEEK_SET) < 0) { err(11, "cannot lseek"); }
