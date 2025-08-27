@@ -23,9 +23,18 @@ void fill_array(bool* arr, int size, bool val) {
     }
 }
 
+bool all_true(bool* arr, int size) {
+    for (int i = 0; i < size; i++) {
+        if (!arr[i]) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 int main(int argc, char* argv[]) {
     if (argc < 2 || argc > 21) { errx(1, "invalid usage"); }
-    printf("size of struct: %ld", sizeof(element));
     int fds[argc - 1];
     for (int i = 0; i < argc - 1; i++) {
         fds[i] = open(argv[i + 1], O_RDONLY);
@@ -60,15 +69,16 @@ int main(int argc, char* argv[]) {
             lines[i].text[read_bytes] = '\0';
         }
 
-        int min_idx = 0;
-        bool entered = false;
-        for (int i = 1; i < argc - 1; i++) {
+        int min_idx = -1;
+        for (int i = 0; i < argc - 1; i++) {
             if(is_finished[i]) { continue; }
-            if (!entered) { entered = true; }
-            if(lines[i].id < lines[min_idx].id) { min_idx = i; }
+            if (min_idx == -1) { min_idx = i; }
+            else if (lines[i].id < lines[min_idx].id) { min_idx = i; }
         }
 
-        if (!entered) { break; } // all files have been processed (or at least that's when I want us to break the while loop :-))
+        if(all_true(is_finished, argc - 1)) {
+            break;
+        }
 
         char msg1[] = "име на роля ";
         char msg2[] = ": реплика ";
@@ -76,10 +86,11 @@ int main(int argc, char* argv[]) {
         write(1, heads[min_idx].text, strlen((char *)heads[min_idx].text));
         write(1, msg2, strlen(msg2));
         write(1, lines[min_idx].text, strlen((char *)lines[min_idx].text));
+        char nl = '\n';
+        write(1, &nl, sizeof(nl));
         fill_array(should_read_from, argc - 1, false);
         should_read_from[min_idx] = true;
     }
 
     exit(0);
 }
-
