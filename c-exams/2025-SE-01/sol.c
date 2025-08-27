@@ -17,7 +17,7 @@ typedef struct {
     uint8_t text[256]; // +1 for the terminating null
 } element_head;
 
-void set_array(bool* arr, int size, bool val) {
+void fill_array(bool* arr, int size, bool val) {
     for (int i = 0; i < size; i++) {
         arr[i] = val;
     }
@@ -46,8 +46,8 @@ int main(int argc, char* argv[]) {
 
     bool should_read_from[argc - 1];
     bool is_finished[argc - 1];
-    set_array(should_read_from, argc - 1, true);
-    set_array(is_finished, argc - 1, false);
+    fill_array(should_read_from, argc - 1, true);
+    fill_array(is_finished, argc - 1, false);
 
     element_head lines[argc - 1];
     while (true) {
@@ -77,7 +77,7 @@ int main(int argc, char* argv[]) {
         write(1, heads[min_idx].text, strlen((char *)heads[min_idx].text));
         write(1, msg2, strlen(msg2));
         write(1, lines[min_idx].text, strlen((char *)lines[min_idx].text));
-        set_array(should_read_from, argc - 1, false);
+        fill_array(should_read_from, argc - 1, false);
         should_read_from[min_idx] = true;
     }
 
