@@ -1,0 +1,74 @@
+// Basically the main thing that nudged me in the right direction
+// was the question I asked myself "how are we supposed to use the fact that in each file the lines are sorted?".
+// And then the 2 pointers problem came to my mind. Here we have n pointers and files instead of arrays, but the idea is the same.
+
+#include <stdint.h>
+#include <err.h>
+#include <fcntl.h>
+#include <stdlib.h>
+#include <stdio.h>
+
+typedef struct {
+    uint64_t id;
+    uint8_t text_len;
+    uint8_t text[256]; // +1 for the terminating null
+} element_head;
+
+void set_array(bool* arr, int size, bool val) {
+    for (int i = 0; i < size; i++) {
+        arr[i] = val;
+    }
+}
+
+int main(int argc, char* argv[]) {
+    if (argc < 2 || argc > 21) { errx(1, "invalid usage"); }
+    printf("size of struct: %ld", sizeof(element_head));
+    int fds[argc - 1];
+    for (int i = 0; i < argc - 1; i++) {
+        fds[i] = open(argv[i + 1], O_RDONLY);
+
+        if (fds[i] < 0) { err(2, "can't open file %s, terminating...", argv[i+1]); }
+    }
+
+    
+    element_head heads[argc - 1];
+    for (int i = 0; i < argc - 1; i++) {
+        if(read(fd[i], &heads[i].id, sizeof(heads[i].id)) < 0) { err(3, "can't read from file %s", argv[i+1]); }
+        if(heads[i].id != 133742) { errx(4, "invalid format of file %s", argv[i+1]); }
+        if(read(fd[i], &heads[i].text_len, sizeof(heads[i].text_len)) < 0) { err(3, "can't read from file %s", argv[i+1]); }
+        size_t read_bytes;
+        if((read_bytes = read(fd[i], heads[i].text, heads[i].text_len)) < 0) { err(4, "can't read from file %s", argv[i+1]; }
+        heads[i].text[read_bytes] = '\0';
+    }
+
+    bool should_read_from[argc - 1];
+    set_array(should_read_from, argc - 1, true);
+
+    while (true) {
+        element_head lines[argc - 1];
+        for (int i = 0; i < argc - 1; i++) {
+            if (!should_read_from[i]) continue;
+            if(read(fd[i], &lines[i].id, sizeof(heads[i].id)) < 0) { err(3, "can't read from file %s", argv[i+1]); }
+            if(read(fd[i], &lines[i].text_len, sizeof(heads[i].text_len)) < 0) { err(3, "can't read from file %s", argv[i+1]); }
+            size_t read_bytes;
+            if((read_bytes = read(fd[i], lines[i].text, heads[i].text_len)) < 0) { err(4, "can't read from file %s", argv[i+1]; }
+            lines[i].text[read_bytes] = '\0';
+        }
+
+        int min_ind = 0;
+        for (int i = 1; i < argc - 1; i++) {
+            if(lines[i].id < lines[min_ind].id) { min_ind = i; }
+        }
+
+        char msg1[] = "име на роля ";
+        char msg2[] = ": реплика "
+        write(1, msg1, strlen(msg1);
+        write(1, heads[min_ind].text, strlen(heads[min_ind].text));
+        write(1, msg2, strlen(msg2);
+        write(1, lines[min_ind].text, strlen(lines[min_ind].text));
+        set_array(should_read_from, argc - 1, true);
+        should_read_from[min_ind] = false;
+    }
+
+    exit(0);
+}
