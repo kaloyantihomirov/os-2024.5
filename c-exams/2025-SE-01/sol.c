@@ -15,7 +15,7 @@ typedef struct {
     uint64_t id;
     uint8_t text_len;
     uint8_t text[256]; // +1 for the terminating null
-} element_head;
+} element;
 
 void fill_array(bool* arr, int size, bool val) {
     for (int i = 0; i < size; i++) {
@@ -25,7 +25,7 @@ void fill_array(bool* arr, int size, bool val) {
 
 int main(int argc, char* argv[]) {
     if (argc < 2 || argc > 21) { errx(1, "invalid usage"); }
-    printf("size of struct: %ld", sizeof(element_head));
+    printf("size of struct: %ld", sizeof(element));
     int fds[argc - 1];
     for (int i = 0; i < argc - 1; i++) {
         fds[i] = open(argv[i + 1], O_RDONLY);
@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
         if (fds[i] < 0) { err(2, "can't open file %s, terminating...", argv[i+1]); }
     }
     
-    element_head heads[argc - 1];
+    element heads[argc - 1];
     for (int i = 0; i < argc - 1; i++) {
         if(read(fds[i], &heads[i].id, sizeof(heads[i].id)) < 0) { err(3, "can't read from file %s", argv[i+1]); }
         if(heads[i].id != 133742) { errx(4, "invalid format of file %s", argv[i+1]); }
@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
     fill_array(should_read_from, argc - 1, true);
     fill_array(is_finished, argc - 1, false);
 
-    element_head lines[argc - 1];
+    element lines[argc - 1];
     while (true) {
         for (int i = 0; i < argc - 1; i++) {
             if (!should_read_from[i]) continue;
