@@ -1,0 +1,6 @@
+/home dir root:users 0755
+/home/pesho dir pesho:pesho 0700
+/home/pesho/some_file file 0644
+/home/pesho/some_dir dir 0755
+/home/pesho/some_dir/some_link symlink ../some_file
+/home/pesho/some_other_dir non_existant

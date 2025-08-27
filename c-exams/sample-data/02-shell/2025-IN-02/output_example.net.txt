@@ -1,0 +1,17 @@
+; team degas
+haydn  IN  NS  alfa.example.net.
+; team monet
+schubert  IN  NS  charlie.example.net.
+schubert  IN  NS  delta.example.net.
+schubert  IN  NS  foxtrot.example.net.
+berlioz  IN  NS  charlie.example.net.
+berlioz  IN  NS  delta.example.net.
+berlioz  IN  NS  foxtrot.example.net.
+liszt  IN  NS  charlie.example.net.
+liszt  IN  NS  delta.example.net.
+liszt  IN  NS  foxtrot.example.net.
+; team renoir
+rossini  IN  NS  bravo.example.net.
+rossini  IN  NS  echo.example.net.
+chopin  IN  NS  bravo.example.net.
+chopin  IN  NS  echo.example.net.

@@ -1,0 +1,6 @@
+alfa  haydn degas
+bravo	rossini	renoir
+charlie	schubert	monet
+delta	berlioz	monet
+echo	chopin	renoir
+foxtrot	liszt	monet

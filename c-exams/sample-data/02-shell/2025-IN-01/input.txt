@@ -1,0 +1,4 @@
+/tmp/one R 700
+/tmp/two A 700
+/tmp/four A 750
+/tmp/twenty T 750

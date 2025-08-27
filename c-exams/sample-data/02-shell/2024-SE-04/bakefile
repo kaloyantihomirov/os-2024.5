@@ -1,0 +1,4 @@
+chapter1.out:chapter1.in:cp chapter1.in chapter1.out
+chapter2.out:chapter2.in drawing42.out:cat chapter2.in drawing42.out > chapter2.out
+book.out:chapter1.out chapter2.out:cat chapter1.out chapter2.out > book.out
+drawing42.out:drawing42.in:cp drawing42.in drawing42.out
