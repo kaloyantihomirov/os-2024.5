@@ -7,6 +7,9 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
+#include <unistd.h>
+#include <string.h>
 
 typedef struct {
     uint64_t id;
@@ -33,11 +36,11 @@ int main(int argc, char* argv[]) {
     
     element_head heads[argc - 1];
     for (int i = 0; i < argc - 1; i++) {
-        if(read(fd[i], &heads[i].id, sizeof(heads[i].id)) < 0) { err(3, "can't read from file %s", argv[i+1]); }
+        if(read(fds[i], &heads[i].id, sizeof(heads[i].id)) < 0) { err(3, "can't read from file %s", argv[i+1]); }
         if(heads[i].id != 133742) { errx(4, "invalid format of file %s", argv[i+1]); }
-        if(read(fd[i], &heads[i].text_len, sizeof(heads[i].text_len)) < 0) { err(3, "can't read from file %s", argv[i+1]); }
-        size_t read_bytes;
-        if((read_bytes = read(fd[i], heads[i].text, heads[i].text_len)) < 0) { err(4, "can't read from file %s", argv[i+1]; }
+        if(read(fds[i], &heads[i].text_len, sizeof(heads[i].text_len)) < 0) { err(3, "can't read from file %s", argv[i+1]); }
+        ssize_t read_bytes;
+        if((read_bytes = read(fds[i], heads[i].text, heads[i].text_len)) < 0) { err(4, "can't read from file %s", argv[i+1]); }
         heads[i].text[read_bytes] = '\0';
     }
 
@@ -50,11 +53,11 @@ int main(int argc, char* argv[]) {
     while (true) {
         for (int i = 0; i < argc - 1; i++) {
             if (!should_read_from[i]) continue;
-            size_t read_bytes;
-            if((read_bytes = read(fd[i], &lines[i].id, sizeof(lines[i].id))) < 0) { err(3, "can't read from file %s", argv[i+1]); }
+            ssize_t read_bytes;
+            if((read_bytes = read(fds[i], &lines[i].id, sizeof(lines[i].id))) < 0) { err(3, "can't read from file %s", argv[i+1]); }
             if (read_bytes == 0) { is_finished[i] = true; continue; }
-            if(read(fd[i], &lines[i].text_len, sizeof(lines[i].text_len)) < 0) { err(3, "can't read from file %s", argv[i+1]); }
-            if((read_bytes = read(fd[i], lines[i].text, lines[i].text_len)) < 0) { err(4, "can't read from file %s", argv[i+1]; }
+            if(read(fds[i], &lines[i].text_len, sizeof(lines[i].text_len)) < 0) { err(3, "can't read from file %s", argv[i+1]); }
+            if((read_bytes = read(fds[i], lines[i].text, lines[i].text_len)) < 0) { err(4, "can't read from file %s", argv[i+1]); }
             lines[i].text[read_bytes] = '\0';
         }
 
@@ -63,17 +66,17 @@ int main(int argc, char* argv[]) {
         for (int i = 1; i < argc - 1; i++) {
             if(is_finished[i]) { continue; }
             if (!entered) { entered = true; }
-            if(lines[i].id < lines[min_idx].id) { min_ind = i; }
+            if(lines[i].id < lines[min_idx].id) { min_idx = i; }
         }
 
         if (!entered) { break; }
 
         char msg1[] = "име на роля ";
-        char msg2[] = ": реплика "
-        write(1, msg1, strlen(msg1);
-        write(1, heads[min_idx].text, strlen(heads[min_ind].text));
-        write(1, msg2, strlen(msg2);
-        write(1, lines[min_idx].text, strlen(lines[min_ind].text));
+        char msg2[] = ": реплика ";
+        write(1, msg1, strlen(msg1));
+        write(1, heads[min_idx].text, strlen((char *)heads[min_idx].text));
+        write(1, msg2, strlen(msg2));
+        write(1, lines[min_idx].text, strlen((char *)lines[min_idx].text));
         set_array(should_read_from, argc - 1, false);
         should_read_from[min_idx] = true;
     }
