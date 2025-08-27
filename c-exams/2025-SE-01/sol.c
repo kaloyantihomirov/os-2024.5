@@ -98,5 +98,6 @@ int main(int argc, char* argv[]) {
         should_read_from[min_idx] = true;
     }
 
+    for(int i = 0; i < argc - 1; i++) { close(fds[i]); }
     exit(0);
 }
