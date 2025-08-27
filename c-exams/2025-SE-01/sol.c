@@ -42,33 +42,42 @@ int main(int argc, char* argv[]) {
     }
 
     bool should_read_from[argc - 1];
+    bool is_finished[argc - 1];
     set_array(should_read_from, argc - 1, true);
+    set_array(is_finished, argc - 1, false);
 
+    element_head lines[argc - 1];
     while (true) {
-        element_head lines[argc - 1];
         for (int i = 0; i < argc - 1; i++) {
             if (!should_read_from[i]) continue;
-            if(read(fd[i], &lines[i].id, sizeof(heads[i].id)) < 0) { err(3, "can't read from file %s", argv[i+1]); }
-            if(read(fd[i], &lines[i].text_len, sizeof(heads[i].text_len)) < 0) { err(3, "can't read from file %s", argv[i+1]); }
             size_t read_bytes;
-            if((read_bytes = read(fd[i], lines[i].text, heads[i].text_len)) < 0) { err(4, "can't read from file %s", argv[i+1]; }
+            if((read_bytes = read(fd[i], &lines[i].id, sizeof(lines[i].id))) < 0) { err(3, "can't read from file %s", argv[i+1]); }
+            if (read_bytes == 0) { is_finished[i] = true; continue; }
+            if(read(fd[i], &lines[i].text_len, sizeof(lines[i].text_len)) < 0) { err(3, "can't read from file %s", argv[i+1]); }
+            if((read_bytes = read(fd[i], lines[i].text, lines[i].text_len)) < 0) { err(4, "can't read from file %s", argv[i+1]; }
             lines[i].text[read_bytes] = '\0';
         }
 
-        int min_ind = 0;
+        int min_idx = 0;
+        bool entered = false;
         for (int i = 1; i < argc - 1; i++) {
-            if(lines[i].id < lines[min_ind].id) { min_ind = i; }
+            if(is_finished[i]) { continue; }
+            if (!entered) { entered = true; }
+            if(lines[i].id < lines[min_idx].id) { min_ind = i; }
         }
+
+        if (!entered) { break; }
 
         char msg1[] = "име на роля ";
         char msg2[] = ": реплика "
         write(1, msg1, strlen(msg1);
-        write(1, heads[min_ind].text, strlen(heads[min_ind].text));
+        write(1, heads[min_idx].text, strlen(heads[min_ind].text));
         write(1, msg2, strlen(msg2);
-        write(1, lines[min_ind].text, strlen(lines[min_ind].text));
-        set_array(should_read_from, argc - 1, true);
-        should_read_from[min_ind] = false;
+        write(1, lines[min_idx].text, strlen(lines[min_ind].text));
+        set_array(should_read_from, argc - 1, false);
+        should_read_from[min_idx] = true;
     }
 
     exit(0);
 }
+
