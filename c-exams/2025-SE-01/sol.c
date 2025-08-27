@@ -32,7 +32,6 @@ int main(int argc, char* argv[]) {
 
         if (fds[i] < 0) { err(2, "can't open file %s, terminating...", argv[i+1]); }
     }
-
     
     element_head heads[argc - 1];
     for (int i = 0; i < argc - 1; i++) {
