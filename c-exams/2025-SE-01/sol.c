@@ -68,7 +68,7 @@ int main(int argc, char* argv[]) {
             if(lines[i].id < lines[min_idx].id) { min_idx = i; }
         }
 
-        if (!entered) { break; }
+        if (!entered) { break; } // all files have been processed (or at least that's when I want us to break the while loop :-))
 
         char msg1[] = "име на роля ";
         char msg2[] = ": реплика ";
