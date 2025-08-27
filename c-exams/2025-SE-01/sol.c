@@ -69,7 +69,8 @@ int main(int argc, char* argv[]) {
             lines[i].text[read_bytes] = '\0';
         }
 
-        int min_idx = -1;
+        int min_idx = -1; // took me a while to debug and understand why we need this -> we want this index to always identify a file which we haven't finished reading;
+			  // initialising it to 0 (can) breaks this invariant
         for (int i = 0; i < argc - 1; i++) {
             if(is_finished[i]) { continue; }
             if (min_idx == -1) { min_idx = i; }
